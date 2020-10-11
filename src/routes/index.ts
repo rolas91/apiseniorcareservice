@@ -11,21 +11,23 @@ import { isLogin } from '../middlewares/isLogin';
 
 import uploader from '../middlewares/uploader';
 
+import {getJobsByParams} from '../controllers/jobs';
+
 const EXPIRES_IN = 60 * 60; // 1 hour
 
 export default (app: Application): void => {
   app.get('/', (req, res) => {
-    res.send('meedu.app 🥶');
+    res.send('Api');
   });
 
   app.post('/api/v1/register', async (req, res) => {
     try {
       const response = await auth.register(req.body);
-      const payload = { id: response._id };
+      const payload = { id: response.id };
       const token = await jsonwebtoken.sign(payload, process.env.SECRET!, {
         expiresIn: EXPIRES_IN
       });
-      // console.log('data', payload);
+      console.log('data', token);
       await tokens.newRefreshToken(token, payload);
       res.status(200).send({
         token,
@@ -55,7 +57,7 @@ export default (app: Application): void => {
   app.post('/api/v1/login', async (req, res) => {
     try {
       const response = await auth.login(req.body);
-      const payload = { id: response._id };
+      const payload = { id: response.id };
       const token = await jsonwebtoken.sign(payload, process.env.SECRET!, {
         expiresIn: EXPIRES_IN
       });
@@ -117,4 +119,18 @@ export default (app: Application): void => {
       }
     }
   });
+
+  //Get Jobs By Params
+  app.get('/api/v1/getJobsByParams', isLogin, async (req, res) => {
+    try {
+      const name = JSON.stringify(req.query.name);
+      const state = JSON.stringify(req.query.state);
+           
+      const response = await getJobsByParams(JSON.parse(name), JSON.parse(state));
+      res.status(200).send(response);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+
 };
