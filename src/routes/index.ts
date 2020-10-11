@@ -24,7 +24,7 @@ export default (app: Application): void => {
     try {
       const response = await auth.register(req.body);
       const payload = { id: response.id };
-      const token = await jsonwebtoken.sign(payload,  'supersecret', {
+      const token = await jsonwebtoken.sign(payload, process.env.SECRET || 'supersecret', {
         expiresIn: EXPIRES_IN
       });
       console.log('data', token);

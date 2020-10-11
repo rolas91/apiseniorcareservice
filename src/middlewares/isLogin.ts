@@ -17,7 +17,7 @@ export const isLogin = async (
 ): Promise<void> => {
   try {
     const { token } = req.headers;
-    const result: any = await jwt.verify(token as string, process.env.SECRET!);
+    const result: any = await jwt.verify(token as string, process.env.SECRET || 'supersecret' );
     if (!result) {
       throw new Error('invalid token');
     }
