@@ -40,7 +40,7 @@ const getJobsByParams = async(name:string, state:boolean):Promise<any> => {
             }).andWhere('name =:name',{name:name});
         }
     });
-    return _.omit(result);
+    return _.omit({result});
 }
 
 export{getJobsByParams, register};
