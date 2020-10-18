@@ -8,6 +8,9 @@ export default class Job{
     id:number;
 
     @Column()
+    title:string;
+
+    @Column()
     description:string;
 
     @Column()
