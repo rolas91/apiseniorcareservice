@@ -7,7 +7,10 @@ export default class User{
     id: number;
     
     @Column()
-    username: string;
+    firstname: string;
+
+    @Column()
+    lastname: string;
 
     @Column({unique:true})
     email: string;

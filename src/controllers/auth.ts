@@ -7,12 +7,13 @@ import Users from '../entity/User';
 
 // create a new user and save into db
 const register = async (data: {
-  username: string;
+  firstname: string;
+  lastname:string,
   email: string;
   password: string;
   date: Date;
 }): Promise<any> => {
-  const { username, email } = data;
+  const { firstname, lastname, email } = data;
   let { password } = data;
   let date = new Date;
 
@@ -21,7 +22,8 @@ const register = async (data: {
   password = await bcrypt.hash(password, 10);
 
   const newUser = getRepository(Users).create({
-    username,
+    firstname,
+    lastname,
     email,
     password,
     date
