@@ -66,7 +66,7 @@ export default (app: Application): void => {
       res.status(200).send({
         token,
         expiresIn: EXPIRES_IN,
-        payload
+        response
       });
     } catch (error) {
       console.log(error);
