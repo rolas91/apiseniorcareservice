@@ -65,7 +65,8 @@ export default (app: Application): void => {
       await tokens.newRefreshToken(token, payload);
       res.status(200).send({
         token,
-        expiresIn: EXPIRES_IN
+        expiresIn: EXPIRES_IN,
+        payload
       });
     } catch (error) {
       console.log(error);
