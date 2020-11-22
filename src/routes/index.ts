@@ -70,7 +70,7 @@ export default (app: Application): void => {
       });
     } catch (error) {
       console.log(error);
-      res.status(error.code || 404).send({ message: error.message });
+      res.status(200).send({ message: error.message });
     }
   });
 
