@@ -11,9 +11,11 @@ const register = async (data: {
   lastname:string,
   email: string;
   password: string;
+  phone:string;
+  type:string;
   date: Date;
 }): Promise<any> => {
-  const { firstname, lastname, email } = data;
+  const { firstname, lastname, email, phone, type } = data;
   let { password } = data;
   let date = new Date;
 
@@ -25,7 +27,9 @@ const register = async (data: {
     firstname,
     lastname,
     email,
+    phone,
     password,
+    type,
     date
   });
 
@@ -55,7 +59,6 @@ const login = async (data: {
       message: `The user with the email ${email} was not found`
     };
   
-
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (isValidPassword) {
     return _.omit(user, 'password', '__v');

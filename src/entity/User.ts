@@ -16,10 +16,16 @@ export default class User{
     email: string;
 
     @Column()
+    phone:string;
+
+    @Column()
     password: string;
 
     @Column()
     avatar: string;
+
+    @Column()
+    type:string;
 
     @Column('timestamp')
     date: Date;
