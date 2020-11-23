@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Application } from 'express';
 import * as auth from '../controllers/auth';
 import * as profile from '../controllers/profile';
+import * as user from '../controllers/users';
 
 import tokens from '../controllers/tokens';
 
@@ -78,6 +79,15 @@ export default (app: Application): void => {
     try {
       console.log('userId', req.userId!);
       const response = await profile.info(req.userId!);
+      res.status(200).send(response);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+
+  app.get('/api/v1/getusers', isLogin, async (req, res) => {
+    try {
+      const response = await user.getUsers();
       res.status(200).send(response);
     } catch (error) {
       res.status(500).send({ message: error.message });
