@@ -31,7 +31,13 @@ const register = async(data:{
     });
     const result = await getRepository(Job).save(newJobs);
     return _.omit(result);
-}  
+}
+
+const getAllJobs = async () => {
+    const result = await getRepository(Job).find();
+    
+    return _.omit({result});
+}
 
 const getJobsByParams = async(name:string, state:boolean):Promise<any> => {
     const result = await getRepository(Job).find({
@@ -46,5 +52,5 @@ const getJobsByParams = async(name:string, state:boolean):Promise<any> => {
     return _.omit({result});
 }
 
-export{getJobsByParams, register};
+export{getJobsByParams, register, getAllJobs};
         

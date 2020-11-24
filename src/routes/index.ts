@@ -12,7 +12,7 @@ import { isLogin } from '../middlewares/isLogin';
 
 import uploader from '../middlewares/uploader';
 
-import {getJobsByParams} from '../controllers/jobs';
+import {getJobsByParams, getAllJobs} from '../controllers/jobs';
 
 const EXPIRES_IN = 60 * 60; // 1 hour
 
@@ -138,6 +138,16 @@ export default (app: Application): void => {
       const state = JSON.stringify(req.query.state);
            
       const response = await getJobsByParams(JSON.parse(name), JSON.parse(state));
+      res.status(200).send(response);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+
+  app.get('/api/v1/getJobs', isLogin, async (req, res) => {
+    try {
+               
+      const response = await getAllJobs();
       res.status(200).send(response);
     } catch (error) {
       res.status(500).send({ message: error.message });

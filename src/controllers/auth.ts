@@ -38,7 +38,7 @@ const register = async (data: {
   // const user = await Users.create({
   //   username,
   //   email,
-  //   password
+  //   password 
   // });
   return _.omit(result, 'password', '__v');
 };
