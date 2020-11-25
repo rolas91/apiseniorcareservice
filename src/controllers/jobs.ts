@@ -39,6 +39,7 @@ const getAllJobs = async () => {
     return _.omit({result});
 }
 
+
 const getJobsByParams = async(name:string, state:boolean):Promise<any> => {
     const result = await getRepository(Job).find({
         relations:["jobstatus"],

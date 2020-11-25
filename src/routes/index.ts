@@ -12,16 +12,19 @@ import { isLogin } from '../middlewares/isLogin';
 
 import uploader from '../middlewares/uploader';
 
-import {getJobsByParams, getAllJobs} from '../controllers/jobs';
+import {getJobsByParams, getAllJobs, register} from '../controllers/jobs';
 
 const EXPIRES_IN = 60 * 60; // 1 hour
 
 export default (app: Application): void => {
+
+  
   app.get('/', (req, res) => {
     res.send('Api');
   });
-
-  app.post('/api/v1/register', async (req, res) => {
+  
+  // authenticate
+  app.post('/api/v1/auth/register', async (req, res) => {
     try {
       const response = await auth.register(req.body);
       const payload = { id: response.id };
@@ -44,25 +47,25 @@ export default (app: Application): void => {
         if (e.errors.username) {
           duplicatedValues.push('username');
         }
-
+        
         res
-          .status(409)
-          .send({ message: e.message, duplicatedFields: duplicatedValues });
+        .status(409)
+        .send({ message: e.message, duplicatedFields: duplicatedValues });
         return;
       }
-
+      
       res.status(500).send({ message: e.message });
     }
   });
-
-  app.post('/api/v1/login', async (req, res) => {
+  
+  app.post('/api/v1/auth/login', async (req, res) => {
     try {
       const response = await auth.login(req.body);
       const payload = { id: response.id };
       const token = await jsonwebtoken.sign(payload, process.env.SECRET!, {
         expiresIn: EXPIRES_IN
       });
-
+      
       await tokens.newRefreshToken(token, payload);
       res.status(200).send({
         token,
@@ -74,47 +77,8 @@ export default (app: Application): void => {
       res.status(200).send({ message: error.message });
     }
   });
-
-  app.get('/api/v1/user-info', isLogin, async (req, res) => {
-    try {
-      console.log('userId', req.userId!);
-      const response = await profile.info(req.userId!);
-      res.status(200).send(response);
-    } catch (error) {
-      res.status(500).send({ message: error.message });
-    }
-  });
-
-  app.get('/api/v1/getusers', isLogin, async (req, res) => {
-    try {
-      const response = await user.getUsers();
-      res.status(200).send(response);
-    } catch (error) {
-      res.status(500).send({ message: error.message });
-    }
-  });
-
-  app.post(
-    '/api/v1/update-avatar',
-    isLogin,
-    uploader.single('attachment'),
-    async (req, res) => {
-      try {
-        const { file } = req;
-        if (!file) {
-          throw new Error('Please upload a file');
-        }
-        await profile.avatar(req.userId!, req.filePath!);
-        res.status(200).send(req.filePath);
-      } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-      }
-    }
-  );
-
   // create a new jwt token for an especific user by Id
-  app.post('/api/v1/refresh-token', async (req, res) => {
+  app.post('/api/v1/auth/refresh-token', async (req, res) => {
     try {
       const { token } = req.headers;
       const data = await tokens.refresh(token as string);
@@ -130,28 +94,71 @@ export default (app: Application): void => {
       }
     }
   });
-
-  //Get Jobs By Params
-  app.get('/api/v1/getJobsByParams', isLogin, async (req, res) => {
+  
+  //users
+  app.get('/api/v1/user/user-info', isLogin, async (req, res) => {
+    try {
+      console.log('userId', req.userId!);
+      const response = await profile.info(req.userId!);
+      res.status(200).send(response);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+  
+  app.get('/api/v1/user/getusers', isLogin, async (req, res) => {
+    try {
+      const response = await user.getUsers();
+      res.status(200).send(response);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
+  app.post('/api/v1/user/update-avatar',isLogin, uploader.single('attachment'), async (req, res) => {
+    try {
+      const { file } = req;
+      if (!file) {
+        throw new Error('Please upload a file');
+      }
+      await profile.avatar(req.userId!, req.filePath!);
+      res.status(200).send(req.filePath);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  }
+  );
+  
+  //Endpoint For JOBS
+  app.get('/api/v1/job/getJobsByParams', isLogin, async (req, res) => {
     try {
       const name = JSON.stringify(req.query.name);
       const state = JSON.stringify(req.query.state);
-           
+      
       const response = await getJobsByParams(JSON.parse(name), JSON.parse(state));
       res.status(200).send(response);
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
   });
-
-  app.get('/api/v1/getJobs', isLogin, async (req, res) => {
+  
+  app.get('/api/v1/job/getJobs', isLogin, async (req, res) => {
     try {
-               
+      
       const response = await getAllJobs();
       res.status(200).send(response);
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
   });
+  
+  app.post('/api/v1/job/register', async(req, res) => {
+    try {
+        const response = await  register(req.body);
+        res.status(200).send({message:'successfully',data:response});
+    } catch (error) {
+        res.status(200).send({message:'error transaction',data:error.message});
+    }
 
+  });
 };
