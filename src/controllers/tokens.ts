@@ -20,21 +20,21 @@ export default {
     console.log(payload);
     
 
-    // const newJwt = await jsonwebtoken.sign(payload.toString(), process.env.SECRET!, {
-    //   expiresIn: JWT_EXPIRES_IN
-    // });
+    const newJwt = await jsonwebtoken.sign(payload.toString(), process.env.SECRET!, {
+      expiresIn: JWT_EXPIRES_IN
+    });
 
-    // // updated the refreshToken
-    // getRepository(RefreshToken).merge(refreshToken, {jwt:newJwt});
-    // await getRepository(RefreshToken).save(refreshToken);
-    // // refreshToken.jwt = newJwt;
-    // // await refreshToken.save();
-    // //console.log('refreshToken new', refreshToken);
-    // return {
-    //   token: newJwt,
-    //   expiresIn: JWT_EXPIRES_IN,
-    //   unit: 'seconds'
-    // };
+    // updated the refreshToken
+    getRepository(RefreshToken).merge(refreshToken, {jwt:newJwt});
+    await getRepository(RefreshToken).save(refreshToken);
+    // refreshToken.jwt = newJwt;
+    // await refreshToken.save();
+    //console.log('refreshToken new', refreshToken);
+    return {
+      token: newJwt,
+      expiresIn: JWT_EXPIRES_IN,
+      unit: 'seconds'
+    };
   },
 
   newRefreshToken: async (jwt: string, payload: any): Promise<void> => {

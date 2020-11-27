@@ -20,7 +20,7 @@ export default (app: Application): void => {
 
   
   app.get('/', (req, res) => {
-    res.send('Api');
+    res.send('Api');     
   });
   
   // authenticate
