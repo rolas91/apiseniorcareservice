@@ -13,9 +13,10 @@ const register = async(data:{
     experience:string;
     lat:number;
     lng:number;
+    jobStatusId:number;
     state:boolean;
 }):Promise<any> => {
-    const {title, description, address,schedule, startDate, days, payDertail, experience, lat,lng,state} = data;
+    const {title, description, address,schedule, startDate, days, payDertail, experience, lat,lng, jobStatusId, state } = data;
     const newJobs = getRepository(Job).create({
         title,
         description,
@@ -27,6 +28,7 @@ const register = async(data:{
         experience, 
         lat,
         lng,
+        jobStatusId,
         state
     });
     const result = await getRepository(Job).save(newJobs);
@@ -52,6 +54,14 @@ const getJobsByParams = async(name:string, state:boolean):Promise<any> => {
     
     return _.omit({result});
 }
+
+// const deleteJob = async(id) =>{
+//     try {
+        
+//     } catch (error) {
+        
+//     }
+// }   
 
 export{getJobsByParams, register, getAllJobs};
         

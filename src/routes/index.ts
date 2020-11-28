@@ -161,4 +161,8 @@ export default (app: Application): void => {
     }
 
   });
+
+  app.post('/api/v1/job/delete', async(req, res) => {
+    
+  })
 };
