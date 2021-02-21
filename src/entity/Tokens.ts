@@ -1,4 +1,3 @@
-import { JsonObject } from 'swagger-ui-express';
 import {Entity, Column, PrimaryGeneratedColumn} from'typeorm';
 
 

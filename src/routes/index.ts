@@ -79,14 +79,17 @@ export default (app: Application): void => {
   });
   // create a new jwt token for an especific user by Id
   app.post('/api/v1/auth/refresh-token', async (req, res) => {
+   
+    
     try {
       const { token } = req.headers;
       const data = await tokens.refresh(token as string);
+     
       if (!data) throw new Error('invalid refreshToken');
       console.log('token refrescado');
       res.status(200).send(data);
     } catch (error) {
-      console.log('error refresh-token', error);
+      console.log('error refresh-token', error.message);
       if (error.message === '403') {
         res.status(403).send({ message: 'invalid token' });
       } else {

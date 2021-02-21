@@ -9,27 +9,29 @@ export default {
     if (!jwt) {
       console.log('refreshToken', 'el jwt ingresado es nulo');
     }
+        
     // const refreshToken = await RefreshToken.findOne({ jwt });
-    const refreshToken = await getRepository(RefreshToken).findOne({where:{jwt:jwt}})
+    const refreshToken = await getRepository(RefreshToken).findOne({where:{jwt}})
+   
+
     if (!refreshToken) {
       throw new Error('403');
     }
 
     const { payload } = refreshToken;
+   
 
-    console.log(payload);
-    
-
-    const newJwt = await jsonwebtoken.sign(payload.toString(), process.env.SECRET!, {
+    const newJwt = await jsonwebtoken.sign({id:payload.toString()}, process.env.SECRET!, {
       expiresIn: JWT_EXPIRES_IN
     });
 
     // updated the refreshToken
     getRepository(RefreshToken).merge(refreshToken, {jwt:newJwt});
     await getRepository(RefreshToken).save(refreshToken);
+
     // refreshToken.jwt = newJwt;
     // await refreshToken.save();
-    //console.log('refreshToken new', refreshToken);
+    
     return {
       token: newJwt,
       expiresIn: JWT_EXPIRES_IN,
