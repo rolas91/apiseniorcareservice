@@ -14,7 +14,8 @@ import uploader from '../middlewares/uploader';
 
 import {getJobsByParams, getAllJobs, register} from '../controllers/jobs';
 
-const EXPIRES_IN = 60 * 60; // 1 hour
+// const EXPIRES_IN = 60 * 60; // 1 hour
+const EXPIRES_IN = 60;
 
 export default (app: Application): void => {
 

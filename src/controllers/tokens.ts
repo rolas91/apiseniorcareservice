@@ -2,8 +2,9 @@ import {getRepository} from 'typeorm';
 import jsonwebtoken from 'jsonwebtoken';
 import RefreshToken from '../entity/Tokens';
 
-const JWT_EXPIRES_IN = 60 * 60; // 1 hours in seconds
-
+// const JWT_EXPIRES_IN = 60 * 60; // 1 hours in seconds
+const JWT_EXPIRES_IN = 60;
+ 
 export default {
   refresh: async (jwt: string): Promise<any> => {
     if (!jwt) {
